@@ -1,46 +1,39 @@
-# Getting Started with Create React App
+## Anotações referentes ao [vídeo](https://www.youtube.com/watch?v=NmU2nNehNNY) do Diego Fernandes sobre performance no React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## memo
 
-## Available Scripts
+Como o memo precisa comparar todas as informações que eu entrego para um componente (props, state, info) para saber se ele entrará para o fluxo de renderização. Esse processo pode ser mais lento que o próprio processo de renderização. Deixar que o algoritmo de reconciliação faça o trabalho dele geralmente é mais performático do que usar o memo. É por isso que que o memo não pode ser usado em todos os componentes.
 
-In the project directory, you can run:
+**Quando usar o memo?**
 
-### `yarn start`
+1. **Pure Functional Component**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+   Se o componente é puro, ou seja, se ele sempre será o mesmo baseado nos seus argumentos, propriedades, etc.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+2. **Renders too often**
 
-### `yarn test`
+   Quando um componente renderiza muitas vezes.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. **Re-renders with same props**
 
-### `yarn build`
+   Quando um componente renderiza várias vezes com as mesmas propriedades.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. **Componentes com tamanho médio e grande**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   Não é aconselhável usar o memo em componentes muito simples.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## useMemo
 
-### `yarn eject`
+Similar ao memo, o useMemo precisa verificar se os valores passados no array de dependência mudaram para então executar a função. Caso o processamento executado por essa função seja muito simples não há necessidade de usar o useMemo, pelo contrário, isso pode deixar a aplicação mais lenta.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+**Quando usar o useMemo?**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Para evitar re-cálculos complexos
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## useCallback
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+É usado para resolver problemas de igualdade referencial, como por exemplo uma função ser recriada sempre que um componente é renderizado, forçando os componentes que consomem essa função a serem renderizados também.
 
-## Learn More
+**Quando usar o useCallback?**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Em funções que são repassadas para outros componentes além do componente do seu escopo, como por exemplo em funções de um contexto, onde mais de um componente usa a mesma função.
